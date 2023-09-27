@@ -1,0 +1,23 @@
+public class Main {
+   public static void Rotate(String[] words){
+       //loop through all words in array
+       for (int i = 0; i < words.length; i++){
+           //loop through each word its length times
+           for (int j = 1; j < words[i].length() + 1; j++){
+               String ret = "";
+               //find each iteration of the word
+               for (int m = 0; m < words[i].length(); m++){
+                   ret += words[i].charAt((j + m) % words[i].length());
+               }
+               System.out.print(ret + " ");
+           }
+           System.out.println("");
+       }
+   }
+   public static void main(String[] args) {
+       String[] bruh = {"abc", "abcde"};
+       Rotate(bruh);
+
+
+   }
+}
