@@ -1,0 +1,182 @@
+import java.awt.geom.Point2D;
+import java.util.ArrayList;
+import java.util.List;
+
+public class duh {
+    public duh right = null;
+    public duh left = null;
+    public List<Point2D> boundries = new ArrayList<>();
+    List<polygons> shapesin = new ArrayList<>();
+    public class polygons{
+        public List<Point2D> boundries;
+    }
+    public static void recursivelysplit(duh side){
+        if (side.shapesin.isEmpty()){
+        }
+        else{
+            List<duh> bouttosplit = side.split(side);
+            side.right = bouttosplit.get(0);
+            side.left = bouttosplit.get(1);
+            recursivelysplit(side.right);
+            recursivelysplit(side.left);
+        }
+        List<Point2D> bruh = new ArrayList<>();
+    }
+
+    private List<duh> split(duh input) {
+        List<Point2D> prints = this.shapesin.get(0).boundries;
+        System.out.println("this is a split " + prints.toString());
+        polygons shapespliton = this.shapesin.get(0);
+        int numberofPoints = shapespliton.boundries.size();
+        List<polygons> shapesright = new ArrayList<>();
+        List<polygons> shapesleft = new ArrayList<>();
+
+        //loop through each point to find a straight line to split on
+        for (int i = 0; i < numberofPoints; i++){
+            System.out.println(i);
+            int secondpointindex = (i + 1) % numberofPoints;
+            double x1 = shapespliton.boundries.get(i).getX();
+            double y1 = shapespliton.boundries.get(i).getY();
+            double x2 = shapespliton.boundries.get(secondpointindex).getX();
+            double y2 = shapespliton.boundries.get(secondpointindex).getY();
+            System.out.println(x1 + " " + x2 + " " + y1 + " " + y2);
+            if ((x1 == 0 && x2 == 0) || (x1 == 100 && x2 == 100)){
+                continue;
+            }
+            else if((y1 == 0 && y2 == 0) || (y1 == 100 && y2 == 100)){
+                continue;
+            }
+            else{
+                String angle = "";
+                if (x1 == x2){
+                    angle = "Vertical";
+                }
+                if (y1 == y2){
+                    angle = "Horizontal";
+                }
+                System.out.println(angle);
+                //we have a straight line we will split on that is not on the edge
+                //now we find all shapes that are on each side of line
+                int numpolys = this.shapesin.size();
+                System.out.println(numpolys + " poly");
+                for (int j = 1; j < numpolys; j++){
+                    polygons polycheck = shapesin.get(j);
+                    double[] midpoint = findmid(polycheck.boundries);
+                    if (angle == "Horizontal"){
+                        if (midpoint[0] > x1){
+                            shapesleft.add(polycheck);
+                        }
+                        else{
+                            shapesright.add(polycheck);
+                        }
+                    }
+                    else if (angle == "Vertical"){
+                        if (midpoint[1] > y1){
+                            shapesleft.add(polycheck);
+                        }
+                        else{
+                            shapesright.add(polycheck);
+                        }
+                    }
+                }
+            }
+            duh left = new duh();
+            duh right = new duh();
+            left.shapesin = shapesleft;
+            right.shapesin = shapesright;
+            List<duh>  ret = new ArrayList<>();
+            ret.add(right);
+            ret.add(left);
+            return ret;
+        }
+        return new ArrayList<duh>();
+    }
+
+    public static double[] findmid(List<Point2D> check){
+        int totalpoints = check.size();
+        double x = 0;
+        double y = 0;
+        for (int i = 0; i < totalpoints; i++){
+            x += check.get(i).getX();
+            y += check.get(i).getY();
+        }
+        x /= totalpoints;
+        y /= totalpoints;
+        System.out.println(x + " " + y);
+        return new double[]{x, y};
+    }
+
+    public void addpoly(List<Point2D> input){
+        polygons weep = new polygons();
+        weep.boundries = input;
+        this.shapesin.add(weep);
+    }
+    public static void main(String args[]){
+        //whole entire box area
+        Point2D.Double botmL = new Point2D.Double(0, 100);
+        Point2D.Double topL = new Point2D.Double(0, 0);
+        Point2D.Double topR = new Point2D.Double(100, 0);
+        Point2D.Double botmR = new Point2D.Double(100, 100);
+        //head item
+        duh head = new duh();
+        head.boundries.add(botmL);
+        head.boundries.add(topL);
+        head.boundries.add(topR);
+        head.boundries.add(botmR);
+        //shape 1 from reading
+        Point2D.Double s1bL = new Point2D.Double(0, 5);
+        Point2D.Double s1tL = new Point2D.Double(0, 0);
+        Point2D.Double s1tR = new Point2D.Double(100, 0);
+        Point2D.Double s1bR = new Point2D.Double(100, 5);
+        List<Point2D> list1 = new ArrayList<Point2D>();
+        list1.add(s1bL);
+        list1.add(s1tL);
+        list1.add(s1tR);
+        list1.add(s1bR);
+        head.addpoly(list1);
+        //shape 2 from reading
+        Point2D.Double s2bL = new Point2D.Double(0, 100);
+        Point2D.Double s2tL = new Point2D.Double(0, 0);
+        Point2D.Double s2tR = new Point2D.Double(5, 0);
+        Point2D.Double s2bR = new Point2D.Double(5, 100);
+        List<Point2D> list2 = new ArrayList<Point2D>();
+        list2.add(s1bL);
+        list2.add(s1tL);
+        list2.add(s1tR);
+        list2.add(s1bR);
+        head.addpoly(list2);
+        //shape 3 from reading
+        Point2D.Double s3bL = new Point2D.Double(95, 100);
+        Point2D.Double s3tL = new Point2D.Double(95, 0);
+        Point2D.Double s3tR = new Point2D.Double(100, 100);
+        Point2D.Double s3bR = new Point2D.Double(100, 100);
+        List<Point2D> list3 = new ArrayList<Point2D>();
+        list3.add(s1bL);
+        list3.add(s1tL);
+        list3.add(s1tR);
+        list3.add(s1bR);
+        head.addpoly(list3);
+        //shape 4 from reading
+        Point2D.Double s4bL = new Point2D.Double(0, 100);
+        Point2D.Double s4tL = new Point2D.Double(0, 95);
+        Point2D.Double s4tR = new Point2D.Double(100, 95);
+        Point2D.Double s4bR = new Point2D.Double(100, 100);
+        List<Point2D> list4 = new ArrayList<Point2D>();
+        list4.add(s1bL);
+        list4.add(s1tL);
+        list4.add(s1tR);
+        list4.add(s1bR);
+        head.addpoly(list4);
+        //triangle from reading
+        Point2D.Double s5bL = new Point2D.Double(50, 50);
+        Point2D.Double s5tL = new Point2D.Double(50, 70);
+        Point2D.Double s5tR = new Point2D.Double(70, 50);
+        List<Point2D> list5 = new ArrayList<Point2D>();
+        list5.add(s1bL);
+        list5.add(s1tL);
+        list5.add(s1tR);
+        head.addpoly(list5);
+
+        duh.recursivelysplit(head);
+    }
+}
