@@ -3,6 +3,7 @@ import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Scanner;
 
 public class improved {
     public List<Point2D> splittoGetHere = new ArrayList<>();
@@ -58,19 +59,12 @@ public class improved {
     }
 
     private List<improved> split(improved input) {
-        //List<polygons> prrrn = this.shapesin;
-        //for (int b = 0; b < prrrn.size(); b++){
-        //polygons iter = prrrn.get(b);
-        //System.out.println("woop " + iter.boundries.toString());
-        //}
-        //List<Point2D> prints = this.shapesin.get(0).boundries;
-        //System.out.println("this is a split " + prints.toString());
         List<Point2D> linetosplit = input.spitsInNode.get(0);
         if (shapesin.size() != 0){
             polygons shapespliton = this.shapesin.get(0);
             int numberofPoints = shapespliton.boundries.size();
         }
-        System.out.println("yo");
+        //System.out.println("yo");
         List<polygons> shapesright = new ArrayList<>();
         List<polygons> shapesleft = new ArrayList<>();
         double x1 = linetosplit.get(0).getX();
@@ -85,7 +79,7 @@ public class improved {
         if (y1 == y2){
             angle = "Horizontal";
         }
-        System.out.println(angle);
+        //System.out.println(angle);
 
         improved left = new improved();
         improved right = new improved();
@@ -100,58 +94,57 @@ public class improved {
                     if (angle == "Horizontal") {
                         if (midpoint[1] > y1) {
                             shapesleft.add(polycheck);
-                            System.out.println("left");
+                            //System.out.println("left");
                         } else {
                             shapesright.add(polycheck);
-                            System.out.println("right");
+                            //System.out.println("right");
                         }
                     } else if (angle == "Vertical") {
                         if (midpoint[0] < x1) {
                             shapesleft.add(polycheck);
-                            System.out.println("left");
+                            //System.out.println("left");
                         } else {
                             shapesright.add(polycheck);
-                            System.out.println("right");
+                            //System.out.println("right");
                         }
                     }
                 }
-        System.out.println(x1 + " " + y1 + " " + x2 + " " + y2);
+        //System.out.println(x1 + " " + y1 + " " + x2 + " " + y2);
                     for (int s = 1; s < this.spitsInNode.size(); s++) {
-                        System.out.println(s);
                         List<Point2D> moveline = spitsInNode.get(s);
                         double[] lineinfo = findmid(moveline);
                         if (angle == "Vertical") {
                             if (lineinfo[0] > x1) {
                                 right.spitsInNode.add(moveline);
-                                System.out.println("rightdfd");
+                                //System.out.println("rightdfd");
                             } else {
                                 left.spitsInNode.add(moveline);
-                                System.out.println("leftfdf");
+                                //System.out.println("leftfdf");
                             }
                         }
                         else if (angle == "Horizontal") {
                             if (lineinfo[1] > y1) {
                                 left.spitsInNode.add(moveline);
-                                System.out.println("leftdfd");
+                                //System.out.println("leftdfd");
                             } else {
                                 right.spitsInNode.add(moveline);
-                                System.out.println("righthgh");
+                                //System.out.println("righthgh");
                             }
                         }
                         else{
                             //for angled split
-                            System.out.println("mmmmm");
-                            System.out.println(Arrays.toString(lineinfo));
-                            System.out.println(moveline);
+                            //System.out.println("mmmmm");
+                            //System.out.println(Arrays.toString(lineinfo));
+                            //System.out.println(moveline);
                             double[] splitinfo = findmid(linetosplit);
                             if (lineinfo[0] >= splitinfo[0]){
                                 //left
                                 left.spitsInNode.add(moveline);
-                                System.out.println("left last");
+                                //System.out.println("left last");
                             }
                             else{
                                 right.spitsInNode.add(moveline);
-                                System.out.println("right last");
+                                //System.out.println("right last");
                             }
                         }
                     }
@@ -162,7 +155,7 @@ public class improved {
             List<improved>  ret = new ArrayList<>();
             ret.add(right);
             ret.add(left);
-        System.out.println("bruh");
+        //System.out.println("bruh");
             return ret;
     }
 
@@ -306,7 +299,18 @@ public class improved {
         splitters.add(Line5);
         splitters.add(Line6);
         splitters.add(Line7);
-        head.spitsInNode = splitters;
+        List<List<Point2D>> input_After_Choice = new ArrayList<>();
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("What line do you want to split first, 1-7");
+        int splitfirst = scanner.nextInt();
+        input_After_Choice.add(splitters.get(splitfirst - 1));
+        for (int n = 0; n < splitters.size(); n++){
+            if (splitfirst - 1 == n){
+                continue;
+            }
+            input_After_Choice.add(splitters.get(n));
+        }
+        head.spitsInNode = input_After_Choice;
         System.out.println(head.spitsInNode);
         improved.recursivelysplit(head);
         head.toString(0);
